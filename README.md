@@ -12,9 +12,54 @@ From a checkout of this repository:
 zsh scripts/install.sh --build
 ```
 
-The installer copies the signed app to `~/Applications/iCloud Bridge.app`, installs the MCP launcher at `~/.local/bin/icloud-bridge`, and registers a per-user LaunchAgent so the bridge starts automatically when you log in.
+That one command:
 
-On first launch, click the menu-bar item and choose `Request Missing Access`. Grant Full Access to Calendar and Reminders as needed.
+- copies the signed app to `~/Applications/iCloud Bridge.app`;
+- installs a stable MCP launcher at `~/.local/bin/icloud-bridge`;
+- starts the bridge now and at login with a per-user LaunchAgent;
+- registers a user-level MCP server in every Codex and Claude Code CLI found on `PATH`;
+- builds `dist/iCloud Bridge.mcpb` for one-click Claude Desktop installation.
+
+The client registration follows the same model as Pen: the installed executable is registered directly and globally, so it is available in every project. Existing unrelated client settings are preserved by using each client's own MCP command. Reinstalling is idempotent and migrates the legacy `icloud_bridge` Codex entry to the canonical `icloud-bridge` name.
+
+On first launch, click iCloud Bridge in the menu bar and choose `Request Missing Access`. Grant Full Access to Calendar and Reminders as needed. Start a new Codex or Claude Code session after installation.
+
+Codex desktop, CLI, and IDE clients on the same host share the MCP configuration. See the [Codex MCP documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli). Claude Code's entry is installed at user scope; see the [Claude Code MCP documentation](https://code.claude.com/docs/en/mcp).
+
+### Claude Desktop
+
+Claude Desktop's current managed installation format is an MCP Bundle. To build the app and open Claude's normal extension review prompt in the same command, run:
+
+```sh
+zsh scripts/install.sh --build --claude-desktop
+```
+
+You can also open an already-built bundle yourself:
+
+```sh
+open "dist/iCloud Bridge.mcpb"
+```
+
+The bundle contains only the local launcher and manifest; it connects to the signed iCloud Bridge app installed above. See Anthropic's [local MCP server installation guide](https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop).
+
+### Installer choices
+
+```sh
+# Require one specific CLI integration
+zsh scripts/install.sh --build --codex
+zsh scripts/install.sh --build --claude
+
+# Require both CLI integrations
+zsh scripts/install.sh --build --all-integrations
+
+# Install only the app, launcher, and LaunchAgent
+zsh scripts/install.sh --build --no-integrations
+
+# Register clients later without rebuilding the app
+zsh scripts/configure-integrations.sh --all
+```
+
+The installer does not add a blanket Claude allow-rule. Calendar and reminder writes continue to use the client's normal MCP tool approval policy.
 
 The source build must be signed with an Apple Development or Developer ID Application identity. This is required for macOS to grant the app Calendar and Reminders access. A future GitHub release can provide a signed/notarized app so users do not need to build locally.
 
@@ -24,22 +69,11 @@ The source build must be signed with an Apple Development or Developer ID Applic
 swift build
 swift test
 zsh scripts/build-app.sh
+zsh scripts/build-mcpb.sh
 open "dist/iCloud Bridge.app"
 ```
 
 Open the app once and grant Calendar and/or Reminders Full Access when macOS asks. The MCP server itself is launched by the desktop client with `--stdio`.
-
-## ChatGPT desktop
-
-In ChatGPT desktop, add a local STDIO MCP server:
-
-- Name: `icloud-bridge`
-- Command: `/bin/zsh`
-- Arguments: `-lc 'exec "$HOME/.local/bin/icloud-bridge" --stdio'`
-
-Restart the desktop app or start a new conversation after saving the server. The repository also contains a local plugin package at `plugins/icloud-bridge` with its MCP manifest at `plugins/icloud-bridge/.codex-plugin/plugin.json`.
-
-If your desktop build exposes the local plugin directory, add this repository's `.agents/plugins/marketplace.json` as a local marketplace and install `icloud-bridge`. The direct STDIO setup above is equivalent and is the simplest fallback.
 
 ## MCP smoke test
 
@@ -53,25 +87,14 @@ The script performs MCP initialization and tool discovery, verifies both tool se
 
 It exits with status `3` when either permission has not been granted yet; this is an expected setup state, not an MCP transport failure.
 
-## Codex configuration
-
-```toml
-[mcp_servers.icloud_bridge]
-command = "/Applications/iCloud Bridge.app/Contents/MacOS/iCloudBridge"
-args = ["--stdio"]
-startup_timeout_sec = 10
-tool_timeout_sec = 60
-```
-
-The equivalent Codex CLI command is:
+Confirm that the clients can read back the installed registration with:
 
 ```sh
-codex mcp add icloud-bridge -- /bin/zsh -lc 'exec "$HOME/.local/bin/icloud-bridge" --stdio'
+codex mcp get icloud-bridge
+claude mcp get icloud-bridge
 ```
 
-## Claude Desktop configuration
-
-For the MVP, configure the same executable as a local stdio server using Claude Desktop's local MCP server settings. A `.mcpb` binary bundle can be added as a later packaging step.
+The repository also contains a Codex plugin package at `plugins/icloud-bridge`, with its MCP manifest at `plugins/icloud-bridge/.codex-plugin/plugin.json`. Direct CLI registration remains the default local install path because it works across Codex clients that share the host configuration.
 
 ## Tools
 
