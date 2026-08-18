@@ -1,0 +1,16 @@
+.build/
+.swiftpm/
+DerivedData/
+dist/
+
+.DS_Store
+*.xcuserstate
+
+# Local runtime output
+*.log
+*.sock
+
+# Local secrets and machine-specific configuration
+.env
+.env.*
+!.env.example

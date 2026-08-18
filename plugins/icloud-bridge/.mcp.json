@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "icloud-bridge": {
+      "command": "/bin/zsh",
+      "args": [
+        "-lc",
+        "exec \"$HOME/.local/bin/icloud-bridge\" --stdio"
+      ]
+    }
+  }
+}

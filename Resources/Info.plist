@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>iCloud Bridge</string>
+	<key>CFBundleExecutable</key>
+	<string>iCloudBridge</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.calendarbridge.app</string>
+	<key>CFBundleName</key>
+	<string>iCloud Bridge</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>14.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>iCloud Bridge needs full access to read and manage your calendar through your local MCP clients.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>iCloud Bridge needs access to your calendar for local MCP clients.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>iCloud Bridge needs full access to read and manage your reminders through your local MCP clients.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>iCloud Bridge needs access to your reminders for local MCP clients.</string>
+</dict>
+</plist>

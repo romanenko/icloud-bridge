@@ -1,0 +1,25 @@
+{
+  "name": "icloud-bridge",
+  "version": "0.1.0",
+  "description": "A local macOS MCP bridge for Apple Calendar and Reminders.",
+  "author": {
+    "name": "iCloud Bridge contributors"
+  },
+  "interface": {
+    "displayName": "iCloud Bridge",
+    "shortDescription": "Use local Apple Calendar and Reminders.",
+    "longDescription": "iCloud Bridge connects Codex and ChatGPT desktop to the Calendar and Reminders data already on this Mac. It runs locally and does not store Apple data or credentials.",
+    "developerName": "iCloud Bridge contributors",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Show my upcoming calendar events.",
+      "List my reminder lists and unfinished reminders.",
+      "Create a reminder in my default list."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}
