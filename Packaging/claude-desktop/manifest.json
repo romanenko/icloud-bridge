@@ -1,0 +1,90 @@
+{
+  "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/mcpb/main/schemas/mcpb-manifest-v0.4.schema.json",
+  "manifest_version": "0.4",
+  "name": "icloud-bridge",
+  "display_name": "iCloud Bridge",
+  "version": "0.1.0",
+  "description": "Use Apple Calendar and Reminders through a local MCP bridge.",
+  "long_description": "iCloud Bridge connects Claude Desktop to the Calendar and Reminders data on this Mac. The signed menu-bar app owns macOS permissions; this extension only connects Claude to that local app. Calendar and reminder data is not stored by iCloud Bridge.",
+  "author": {
+    "name": "iCloud Bridge contributors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/romanenko/icloud-bridge.git"
+  },
+  "server": {
+    "type": "binary",
+    "entry_point": "server/icloud-bridge",
+    "mcp_config": {
+      "command": "/bin/zsh",
+      "args": [
+        "${__dirname}/server/icloud-bridge",
+        "--stdio"
+      ],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "calendarGetStatus",
+      "description": "Check Calendar authorization and availability."
+    },
+    {
+      "name": "calendarListCalendars",
+      "description": "List calendars available on this Mac."
+    },
+    {
+      "name": "calendarFindEvents",
+      "description": "Find calendar events in a time range."
+    },
+    {
+      "name": "calendarCreateEvent",
+      "description": "Create a calendar event."
+    },
+    {
+      "name": "calendarUpdateEvent",
+      "description": "Update a calendar event."
+    },
+    {
+      "name": "calendarDeleteEvent",
+      "description": "Delete a calendar event."
+    },
+    {
+      "name": "reminderGetStatus",
+      "description": "Check Reminders authorization and availability."
+    },
+    {
+      "name": "reminderListLists",
+      "description": "List reminder lists available on this Mac."
+    },
+    {
+      "name": "reminderFindReminders",
+      "description": "Find reminders, including incomplete items."
+    },
+    {
+      "name": "reminderCreateReminder",
+      "description": "Create a reminder."
+    },
+    {
+      "name": "reminderUpdateReminder",
+      "description": "Update or complete a reminder."
+    },
+    {
+      "name": "reminderDeleteReminder",
+      "description": "Delete a reminder."
+    }
+  ],
+  "keywords": [
+    "calendar",
+    "reminders",
+    "icloud",
+    "macos"
+  ],
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": [
+      "darwin"
+    ]
+  }
+}
