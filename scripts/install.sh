@@ -6,6 +6,7 @@ BUILD_REQUESTED=false
 CONFIGURE_INTEGRATIONS=true
 OPEN_CLAUDE_DESKTOP=false
 INTEGRATION_ARGUMENTS=()
+BUILD_ARGUMENTS=()
 APP_NAME="iCloud Bridge.app"
 APP_SOURCE="$ROOT_DIR/dist/$APP_NAME"
 APP_DIRECTORY="$HOME/Applications"
@@ -28,6 +29,7 @@ installer registers every Codex and Claude Code CLI it finds on PATH.
 
 Options:
   --build              Rebuild the signed app before installing it
+  --signing-identity ID Use a certificate name or SHA-1 (implies --build)
   --codex              Register Codex (can be combined with --claude)
   --claude             Register Claude Code (alias: --claude-code)
   --all-integrations   Require and register both Codex and Claude Code
@@ -41,6 +43,15 @@ while (( $# > 0 )); do
     case "$1" in
         --build)
             BUILD_REQUESTED=true
+            ;;
+        --signing-identity)
+            if (( $# < 2 )) || [[ -z "$2" ]]; then
+                echo "--signing-identity requires a certificate name or SHA-1." >&2
+                exit 2
+            fi
+            BUILD_ARGUMENTS=(--signing-identity "$2")
+            BUILD_REQUESTED=true
+            shift
             ;;
         --codex)
             INTEGRATION_ARGUMENTS+=(--codex)
@@ -72,7 +83,7 @@ done
 
 if [[ ! -d "$APP_SOURCE" || "$BUILD_REQUESTED" == true ]]; then
     echo "Building the signed macOS app…"
-    zsh "$ROOT_DIR/scripts/build-app.sh"
+    zsh "$ROOT_DIR/scripts/build-app.sh" "${BUILD_ARGUMENTS[@]}"
 fi
 
 zsh "$ROOT_DIR/scripts/build-mcpb.sh"
