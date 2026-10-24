@@ -63,6 +63,27 @@ The installer does not add a blanket Claude allow-rule. Calendar and reminder wr
 
 The source build must be signed with an Apple Development or Developer ID Application identity. This is required for macOS to grant the app Calendar and Reminders access. A future GitHub release can provide a signed/notarized app so users do not need to build locally.
 
+### Choose a signing identity
+
+If multiple Apple Development / Developer ID Application certificates are available,
+the build prompts you to select one. With a single certificate it selects it automatically.
+Selection happens before compilation; non-interactive builds with multiple certificates
+must specify an identity rather than silently using the first.
+
+To choose explicitly (also forces a rebuild):
+
+```sh
+security find-identity -v -p codesigning
+zsh scripts/install.sh --signing-identity "Apple Development: Your Name (IDENTIFIER)"
+# A certificate SHA-1 from the list also works and disambiguates duplicate names:
+zsh scripts/build-app.sh --signing-identity YOUR_CERTIFICATE_SHA1
+```
+
+You can also set `CALENDAR_BRIDGE_SIGNING_IDENTITY` in your shell environment.
+The command-line option takes precedence. Identities must match an exact certificate
+name or SHA-1; a free Personal Team's Apple Development certificate is sufficient
+for local use. Public, notarized distribution requires Developer ID signing.
+
 ## Build
 
 ```sh
